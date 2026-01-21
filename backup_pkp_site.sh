@@ -45,17 +45,18 @@ function Help()
    # Display Help
    echo "This script backs up an OJS or OMP database and website."
    echo
-   echo "Syntax: backup_pkp_site.sh [-l|h|d|f|b]"
+   echo "Syntax: backup_pkp_site.sh [-l|h|d|p|f|b]"
    echo "options:"
    echo "l     Print the MIT License notification."
    echo "h     Print this Help."
-   echo "d     Backup database."
+   echo "d     Backup MySQL / MariaDB database."
+   echo "p     Backup PostgreSQL database."
    echo "f     Backup website files."
    echo "b     Full backup of database and files."
    echo
 }
 
-function Database_backup()
+function MariaDB_backup()
 {
   # Extract the values from the config.ini.php file
   USERNAME=$(grep '^username =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
@@ -73,6 +74,34 @@ function Database_backup()
 
   # Perform the database dump
   mysqldump -u"$USERNAME" -p"$PASSWORD" "$DBNAME" > "$DUMPFILE"
+
+  # Check if the dump was successful
+  if [ $? -eq 0 ]; then
+    echo "Database dump successful. File created: $DUMPFILE"
+  else
+    echo "Database dump failed."
+    exit 1
+  fi
+}
+
+function Postgres_backup()
+{
+  # Extract the values from the config.ini.php file
+  USERNAME=$(grep '^username =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
+  PASSWORD=$(grep '^password =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
+  DBNAME=$(grep '^name =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
+
+  # Check if all required fields are found
+  if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$DBNAME" ]; then
+    echo "Missing one or more required fields (username, password, name) in the file."
+    exit 1
+  fi
+
+  # Create the dump filename
+  DUMPFILE="$PKP_BACKUP_PATH/${DBNAME}_${DATE}.sql"
+
+  # Perform the database dump
+  PGPASSWORD="$PASSWORD" /usr/pgsql-17/bin/pg_dump -h localhost --inserts --format p --username="$USERNAME" -f ${DBNAME}_${DATE}.sql $DBNAME
 
   # Check if the dump was successful
   if [ $? -eq 0 ]; then
@@ -114,7 +143,7 @@ if (( $# == 0 )); then
 fi
 
 # get the options
-while getopts ":lhdfb" flag; do
+while getopts ":lhdpfb" flag; do
    case $flag in
       l) # display License
         License
@@ -122,14 +151,17 @@ while getopts ":lhdfb" flag; do
       h) # display Help
         Help
         exit;;
-      d) # backup database
-        Database_backup
+      d) # backup MySQL / MariaDB database
+        MariaDB_backup
+        exit;;
+      p) # backup PostgreSQL database
+        Postgres_backup
         exit;;
       f) # backup files
         Files_backup
         exit;;
       b) # backup database and files
-        Database_backup
+        MariaDB_backup
         Files_backup
         exit;;
       \?) # invalid option
