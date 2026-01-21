@@ -101,7 +101,7 @@ function Postgres_backup()
   DUMPFILE="$PKP_BACKUP_PATH/${DBNAME}_${DATE}.sql"
 
   # Perform the database dump
-  PGPASSWORD="$PASSWORD" /usr/pgsql-17/bin/pg_dump -h localhost --inserts --format p --username="$USERNAME" -f ${DBNAME}_${DATE}.sql $DBNAME
+  PGPASSWORD="$PASSWORD" /usr/pgsql-17/bin/pg_dump -h localhost --inserts --format p --username="$USERNAME" -f "$DUMPFILE" $DBNAME
 
   # Check if the dump was successful
   if [ $? -eq 0 ]; then
