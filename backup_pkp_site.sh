@@ -23,7 +23,7 @@ source "$SCRIPT_DIR/.env"
 DATE=$(date -I)
 
 PKP_BACKUP_PATH="$HOME/backups"
-CONFIG_FILE="$PKP_WEB_PATH/config.ini.php"
+CONFIG_FILE="$PKP_WEB_PATH/config.inc.php"
 
 ############################################################
 # subprograms                                              #
