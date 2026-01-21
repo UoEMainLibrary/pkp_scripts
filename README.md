@@ -15,9 +15,9 @@ backup_pkp_site.sh performs a backup of an OJS or OMP instance's database and fi
 `./backup_pkp_site.sh [-l|h|d|p|f|b]`
 
 options:
--l     print the MIT License notification
--h     print this Help
--d     backup MySQL / MariaDB database
--p     backup PostgreSQL database
--f     backup website files
--b     full backup of database and files
+- `-l`     print the MIT License notification
+- `-h`     print this Help
+- `-d`     backup MySQL / MariaDB database
+- `-p`     backup PostgreSQL database
+- `-f`     backup website files
+- `-b`     full backup of database and files
