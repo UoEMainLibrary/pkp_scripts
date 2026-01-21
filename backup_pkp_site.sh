@@ -18,6 +18,7 @@
 DATE=$(date -I)
 
 PKP_BACKUP_PATH="$HOME/backups"
+CONFIG_FILE="$PKP_WEB_PATH/config.ini.php"
 
 # retrieve variables from .env file (see .env.template for template)
 # source the .env file from the script's directory
@@ -57,9 +58,9 @@ function Help()
 function Database_backup()
 {
   # Extract the values from the config.ini.php file
-  USERNAME=$(grep '^username =' "$FILENAME" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
-  PASSWORD=$(grep '^password =' "$FILENAME" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
-  DBNAME=$(grep '^name =' "$FILENAME" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
+  USERNAME=$(grep '^username =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
+  PASSWORD=$(grep '^password =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
+  DBNAME=$(grep '^name =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
 
   # Check if all required fields are found
   if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$DBNAME" ]; then
@@ -85,7 +86,7 @@ function Database_backup()
 function Files_backup()
 {
   # extract the values from the config.ini.php file
-  PKP_PRIVATE_PATH=$(grep '^files_dir =' "$FILENAME" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
+  PKP_PRIVATE_PATH=$(grep '^files_dir =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
 
   # check all required variables are found
   if [ -z "$PKP_BACKUP_PATH" ] || [ -z "$PKP_WEB_PATH" ] || [ -z "$OLD_VERSION" ]; then
@@ -122,42 +123,15 @@ while getopts ":lhdfb" flag; do
         Help
         exit;;
       d) # backup database
-        if [ -z "$2" ]
-        then
-          echo "-d requires a path to config.ini.php as an argument"
-          echo
-          echo "Syntax: backup_pkp_site.sh -d [path]"
-        else
-          # read the filename from the argument
-          FILENAME=$2
-          Database_backup
-          exit 1
-        fi;;
+        Database_backup
+        exit;;
       f) # backup files
-        if [ -z "$2" ]
-        then
-          echo "-f requires a path to config.ini.php as an argument"
-          echo
-          echo "Syntax: backup_pkp_site.sh -f [path]"
-        else
-          # read the filename from the argument
-          FILENAME=$2
-          Files_backup
-          exit 1
-        fi;;
+        Files_backup
+        exit;;
       b) # backup database and files
-        if [ -z "$2" ]
-        then
-          echo "-b requires a path to config.ini.php as an argument"
-          echo
-          echo "Syntax: backup_pkp_site.sh -b [path]"
-        else
-          # read the filename from the argument
-          FILENAME=$2
-          Database_backup
-          Files_backup
-          exit 1
-        fi;;
+        Database_backup
+        Files_backup
+        exit;;
       \?) # invalid option
         Help
         exit;;
