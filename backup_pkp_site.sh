@@ -47,12 +47,12 @@ function Help()
    echo
    echo "Syntax: backup_pkp_site.sh [-l|h|d|p|f|b]"
    echo "options:"
-   echo "l     Print the MIT License notification."
-   echo "h     Print this Help."
-   echo "d     Backup MySQL / MariaDB database."
-   echo "p     Backup PostgreSQL database."
-   echo "f     Backup website files."
-   echo "b     Full backup of database and files."
+   echo "l     print the MIT License notification"
+   echo "h     print this Help"
+   echo "d     backup MySQL / MariaDB database"
+   echo "p     backup PostgreSQL database"
+   echo "f     backup website files"
+   echo "b     full backup of database and files"
    echo
 }
 
