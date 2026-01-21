@@ -58,14 +58,14 @@ function Help()
 
 function MariaDB_backup()
 {
-  # Extract the values from the config.ini.php file
+  # Extract the values from the config.inc.php file
   USERNAME=$(grep '^username =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
   PASSWORD=$(grep '^password =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
   DBNAME=$(grep '^name =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
 
   # Check if all required fields are found
   if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$DBNAME" ]; then
-    echo "Missing one or more required fields (username, password, name) in the file."
+    echo "Missing one or more required fields (username, password, name) in config.inc.php."
     exit 1
   fi
 
@@ -86,14 +86,14 @@ function MariaDB_backup()
 
 function Postgres_backup()
 {
-  # Extract the values from the config.ini.php file
+  # Extract the values from the config.inc.php file
   USERNAME=$(grep '^username =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
   PASSWORD=$(grep '^password =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
   DBNAME=$(grep '^name =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
 
   # Check if all required fields are found
   if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$DBNAME" ]; then
-    echo "Missing one or more required fields (username, password, name) in the file."
+    echo "Missing one or more required fields (username, password, name) in config.inc.php."
     exit 1
   fi
 
@@ -114,8 +114,14 @@ function Postgres_backup()
 
 function Files_backup()
 {
-  # extract the values from the config.ini.php file
+  # extract the values from the config.inc.php file
   PKP_PRIVATE_PATH=$(grep '^files_dir =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
+
+  # check if PKP_PRIVATE_PATH was found
+  if [ -z "$PKP_PRIVATE_PATH" ] ; then
+    echo "Missing files_dir value in config.inc.php file."
+    exit 1
+  fi
 
   # check all required variables are found
   if [ -z "$PKP_BACKUP_PATH" ] || [ -z "$PKP_WEB_PATH" ] || [ -z "$OLD_VERSION" ]; then
