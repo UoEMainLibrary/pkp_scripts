@@ -115,7 +115,11 @@ function Postgres_backup()
 function Files_backup()
 {
   # extract the values from the config.inc.php file
-  PKP_PRIVATE_PATH=$(grep '^files_dir =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
+  PKP_PRIVATE_PATH=$(grep '^files_dir =' "$CONFIG_FILE" \
+      | awk -F' = ' '{print $2}' \
+      | sed 's/^[ \t]*//;s/[ \t]*$//' \
+      | tr -d '\r\n' \
+      | sed 's/^"\(.*\)"$/\1/')
 
   # check if PKP_PRIVATE_PATH was found
   if [ -z "$PKP_PRIVATE_PATH" ] ; then
