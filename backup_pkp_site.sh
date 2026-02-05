@@ -133,9 +133,9 @@ function Files_backup()
     exit 1
   fi
 
-  tar cvzf "$PKP_BACKUP_PATH/ojs_private-$DATE.tgz" -C "$PKP_PRIVATE_PATH" .
+  tar cvzf "$PKP_BACKUP_PATH/ojs_private_$DATE.tgz" -C "$PKP_PRIVATE_PATH" .
 
-  tar cvzf "$PKP_BACKUP_PATH/ojs_application-$DATE.tgz" -C "$PKP_WEB_PATH" .
+  tar cvzf "$PKP_BACKUP_PATH/ojs_application_$DATE.tgz" -C "$PKP_WEB_PATH" .
 }
 
 ############################################################
