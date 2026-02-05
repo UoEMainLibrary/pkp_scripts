@@ -56,6 +56,18 @@ function Help()
    echo
 }
 
+# a function to prompt the user before each step
+function Prompt_user() {
+    echo "----"
+    read -p "Proceed with step $1 ? [y/n]: " -n 1 -r REPLY
+    echo    # (optional) move to a new line
+    if [[ ! $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "Exiting without completing step $1."
+        exit 1
+    fi
+}
+
 function Enter_maintenance_mode()
 {
    # put site into maintenance mode
@@ -105,6 +117,9 @@ function Install_release_package()
     # set permissions
     chown -R $WEB_USER:$WEB_GROUP "$PKP_WEB_PATH"
     chown $WEB_USER:$WEB_GROUP "$PKP_WEB_PATH/.htaccess"
+
+    # remove installation package
+    rm "$PKP_ROOT_PATH/$PKP_SOFTWARE-$NEW_VERSION.tar.gz"
 
     # show reminder to match up config.inc.php with new config.TEMPLATE.inc.php
     echo "Remember to MANUALLY match up config.inc.php with config.TEMPLATE.inc.php to add or remove any configuration options as necessary."
@@ -159,6 +174,8 @@ while getopts ":lhmeicu" flag; do
         Upgrade_check
         exit;;
       u) # upgrade database
+        Upgrade_check
+        Prompt_user "upgrade database"
         Upgrade
         exit;;
       \?) # invalid option
