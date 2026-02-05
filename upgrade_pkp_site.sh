@@ -44,13 +44,14 @@ function Help()
    # Display Help
    echo "This script upgrades up an OJS or OMP database and website."
    echo
-   echo "Syntax: upgrade_pkp_site.sh [-l|h|m|e|i|u]"
+   echo "Syntax: upgrade_pkp_site.sh [-l|h|m|e|i||c|u]"
    echo "options:"
    echo "l     print the MIT License notification"
    echo "h     print this Help"
    echo "m     put website into maintenance mode"
    echo "e     turn off maintenance mode"
    echo "i     install new version of OJS or OMP"
+   echo "c     check upgrade for OJS or OMP database"
    echo "u     upgrade OJS or OMP database"
    echo
 }
@@ -136,7 +137,7 @@ if (( $# == 0 )); then
 fi
 
 # get the options
-while getopts ":lhmeiu" flag; do
+while getopts ":lhmeicu" flag; do
    case $flag in
       l) # display License
         License
@@ -151,12 +152,14 @@ while getopts ":lhmeiu" flag; do
         Exit_maintenance_mode
         exit;;
       i) # install new version
-        Enter_maintenance_mode
         Download_release_package
         Install_release_package
         exit;;
-      u) # upgrade database
+      c) # upgrade check
         Upgrade_check
+        exit;;
+      u) # upgrade database
+        Upgrade
         exit;;
       \?) # invalid option
         Help
