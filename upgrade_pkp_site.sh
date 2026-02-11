@@ -105,6 +105,12 @@ function Install_release_package()
 
     # install the new files
     tar --strip-components=1 -xvzf "$PKP_ROOT_PATH/$PKP_SOFTWARE-$NEW_VERSION.tar.gz" -C "$PKP_WEB_PATH"
+}
+
+function Copy_previous_files()
+{
+    # copy back the healthcheck
+    rync -av "$PKP_WEB_PATH-$OLD_VERSION/healthcheck/" "$PKP_WEB_PATH/healthcheck"
 
     # copy back the config
     cp "$PKP_WEB_PATH-$OLD_VERSION/config.inc.php" "$PKP_WEB_PATH"
@@ -174,6 +180,7 @@ while getopts ":lhmeicu" flag; do
       i) # install new version
         Download_release_package
         Install_release_package
+        Copy_previous_files
         exit;;
       c) # upgrade check
         Upgrade_check
