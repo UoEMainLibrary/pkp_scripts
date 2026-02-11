@@ -78,11 +78,15 @@ order deny,allow
 deny from all
 ErrorDocument 403 "This site is undergoing maintenance and should return shortly. Thank you for your patience."
 EOL
+
+  echo "Site is now IN maintenance mode"
 }
 
 function Exit_maintenance_mode()
 {
    mv "$PKP_WEB_PATH/.htaccess-$DATE" "$PKP_WEB_PATH/.htaccess"
+
+  echo "Site is now NOT IN maintenance mode"
 }
 
 function Download_release_package()
@@ -134,9 +138,10 @@ function Upgrade()
 {
     # the memory limit might need to be tweaked. See PKP instructions page for more details.
     # php -d memory_limit=2048M tools/upgrade.php upgrade
-    nohup php "$PKP_WEB_PATH/tools/upgrade.php" upgrade > $PKP_BACKUP_PATH/upgrade.log &
-    echo "Monitor $PKP_BACKUP_PATH/upgrade.log and wait for completion."
-    echo "*** PROCEED ONLY WHEN SURE PROCESS HAS COMPLETED ***"
+    #nohup php "$PKP_WEB_PATH/tools/upgrade.php" upgrade > $PKP_BACKUP_PATH/upgrade.log &
+    #echo "*** PROCEED ONLY WHEN SURE PROCESS HAS COMPLETED ***"
+    #echo "Monitor $PKP_BACKUP_PATH/upgrade.log and wait for completion."
+    php "$PKP_WEB_PATH/tools/upgrade.php" upgrade
 }
 
 ############################################################
