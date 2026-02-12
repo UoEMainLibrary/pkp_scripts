@@ -34,6 +34,8 @@ upgrade_pkp_site.sh performs an upgrade of an OJS or OMP instance including putt
 
 upgrade_pkp_site.sh requires all the variables to be filled in .env.
 
+⚠️ Always ensure that you have run a full backup of your site before running an upgrade. ⚠️
+
 ### usage
 
 `./upgrade_pkp_site.sh [-l|h|m|e|i||c|u]`
