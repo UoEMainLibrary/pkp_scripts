@@ -60,7 +60,7 @@ function MariaDB_backup()
 {
   # Extract the values from the config.inc.php file
   USERNAME=$(grep '^username =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
-  PASSWORD=$(grep '^password =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
+  PASSWORD=$(grep '^password =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//;s/^"//;s/"$//' | tr -d '\r\n')
   DBNAME=$(grep '^name =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
 
   # Check if all required fields are found
@@ -88,7 +88,7 @@ function Postgres_backup()
 {
   # Extract the values from the config.inc.php file
   USERNAME=$(grep '^username =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
-  PASSWORD=$(grep '^password =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
+  PASSWORD=$(grep '^password =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//;s/^"//;s/"$//' | tr -d '\r\n')
   DBNAME=$(grep '^name =' "$CONFIG_FILE" | awk -F' = ' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//' | tr -d '\r\n')
 
   # Check if all required fields are found

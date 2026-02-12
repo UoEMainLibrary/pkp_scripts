@@ -98,7 +98,7 @@ function Install_release_package()
 {
     # move the live directory out of the way as a further backup
     # and also so we can unpack the new files into a clean location
-    rsync -av "$PKP_WEB_PATH/" "$PKP_WEB_PATH-$OLD_VERSION/"
+    mv "$PKP_WEB_PATH" "$PKP_WEB_PATH-$OLD_VERSION"
 
     # recreate the live directory
     mkdir "$PKP_WEB_PATH"
@@ -109,8 +109,10 @@ function Install_release_package()
 
 function Copy_previous_files()
 {
-    # copy back the healthcheck
-    rync -av "$PKP_WEB_PATH-$OLD_VERSION/healthcheck/" "$PKP_WEB_PATH/healthcheck"
+    # copy back the healthcheck only if that directory exists
+    if [ -d "$PKP_WEB_PATH-$OLD_VERSION/healthcheck" ]; then
+        rsync -av "$PKP_WEB_PATH-$OLD_VERSION/healthcheck/" "$PKP_WEB_PATH/healthcheck/"
+    fi
 
     # copy back the config
     cp "$PKP_WEB_PATH-$OLD_VERSION/config.inc.php" "$PKP_WEB_PATH"
