@@ -44,7 +44,7 @@ function Help()
    # Display Help
    echo "This script upgrades up an OJS or OMP database and website."
    echo
-   echo "Syntax: upgrade_pkp_site.sh [-l|h|m|e|i||c|u]"
+   echo "Syntax: upgrade_pkp_site.sh [-l|h|m|e|i|c|u]"
    echo "options:"
    echo "l     print the MIT License notification"
    echo "h     print this Help"

@@ -38,7 +38,7 @@ upgrade_pkp_site.sh requires all the variables to be filled in .env.
 
 ### usage
 
-`./upgrade_pkp_site.sh [-l|h|m|e|i||c|u]`
+`./upgrade_pkp_site.sh [-l|h|m|e|i|c|u]`
 
 options:
 - `-l`     print the MIT License notification
