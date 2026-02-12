@@ -53,5 +53,8 @@ To run a full upgrade, run the commands in the following order. Be sure to check
 
 - `./upgrade_pkp_site.sh -m`
 - `./upgrade_pkp_site.sh -i`
+
+After installing a new version of OJS or OMP, you need to manually update config.inc.php to add any new configuration options or remove any deprecated configuration options from config.TEMPLATE.inc.php. This is especially important when upgrading to a major release.
+
 - `./upgrade_pkp_site.sh -u`
 - `./upgrade_pkp_site.sh -e`
