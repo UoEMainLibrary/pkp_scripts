@@ -1,6 +1,6 @@
 #!/bin/bash
 # @name: upgrade_pkp_site.sh
-# @creation_date: 2025-01-21
+# @creation_date: 2026-01-21
 # @license: The MIT License <https://opensource.org/licenses/MIT>
 # @author: Ronan Burnett
 # @author: Simon Bowie <simonxix@simonxix.com>
