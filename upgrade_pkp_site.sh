@@ -109,7 +109,7 @@ function Install_release_package()
 
 function Copy_previous_files()
 {
-    # copy back the healthcheck only if that directory exists
+    # copy back the healthcheck if that directory exists
     if [ -d "$PKP_WEB_PATH-$OLD_VERSION/healthcheck" ]; then
         rsync -av "$PKP_WEB_PATH-$OLD_VERSION/healthcheck/" "$PKP_WEB_PATH/healthcheck/"
     fi
