@@ -145,11 +145,10 @@ function Upgrade_check()
 function Upgrade()
 {
     # the memory limit might need to be tweaked. See PKP instructions page for more details.
-    # php -d memory_limit=2048M tools/upgrade.php upgrade
     #nohup php "$PKP_WEB_PATH/tools/upgrade.php" upgrade > $PKP_BACKUP_PATH/upgrade.log &
     #echo "*** PROCEED ONLY WHEN SURE PROCESS HAS COMPLETED ***"
     #echo "Monitor $PKP_BACKUP_PATH/upgrade.log and wait for completion."
-    php "$PKP_WEB_PATH/tools/upgrade.php" upgrade
+    php -d memory_limit=2048M "$PKP_WEB_PATH/tools/upgrade.php" upgrade
 }
 
 ############################################################
