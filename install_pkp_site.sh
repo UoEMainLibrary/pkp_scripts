@@ -102,7 +102,7 @@ function Install_database()
 
   Data_prompt DB_PASSWORD "OJS database password" || exit 1
 
-  mariadb --user="root" --password="$DB_ROOT_PASSWORD" --database="ojs_db" --execute='CREATE DATABASE ojs_db; GRANT ALL PRIVILEGES ON ojs_db.* TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD'; FLUSH PRIVILEGES;'
+  mariadb --user="root" --password="$DB_ROOT_PASSWORD" --database="ojs_db" --execute="CREATE DATABASE ojs_db; GRANT ALL PRIVILEGES ON ojs_db.* TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD'; FLUSH PRIVILEGES;"
 }
 
 ############################################################
