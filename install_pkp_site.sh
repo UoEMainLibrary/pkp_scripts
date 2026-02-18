@@ -39,36 +39,70 @@ function License()
 
 function Help()
 {
-   # Display Help
-   echo "This script installs an OJS or OMP instance."
-   echo
-   echo "Syntax: install_pkp_site.sh [-l|h|i]"
-   echo "options:"
-   echo "l     print the MIT License notification"
-   echo "h     print this Help"
-   echo "i     install application"
-   echo
+  # Display Help
+  echo "This script installs an OJS or OMP instance."
+  echo
+  echo "Syntax: install_pkp_site.sh [-l|h|i|d]"
+  echo "options:"
+  echo "l     print the MIT License notification"
+  echo "h     print this Help"
+  echo "i     install application without database"
+  echo "d     install application with database"
+  echo
+}
+
+function Data_prompt() 
+{
+  local __varname=$1
+  local __prompt=$2
+  local __input
+
+  echo "----" >&2
+  read -r -p "Please enter $__prompt: " __input >&2
+  echo >&2
+
+  if [[ -z "$__input" ]]; then
+    echo "Error: No input provided for $__prompt." >&2
+    return 1
+  fi
+
+  # assign input to the variable name passed
+  printf -v "$__varname" '%s' "$__input"
 }
 
 function Download_release_package()
 {
-    wget -P $PKP_ROOT_PATH "https://pkp.sfu.ca/$PKP_SOFTWARE/download/$PKP_SOFTWARE-$NEW_VERSION.tar.gz"
+  wget -P $PKP_ROOT_PATH "https://pkp.sfu.ca/$PKP_SOFTWARE/download/$PKP_SOFTWARE-$NEW_VERSION.tar.gz"
 }
 
 function Install_release_package()
 {
-    # create the live directory
-    mkdir "$PKP_WEB_PATH"
+  # create the live directory
+  mkdir "$PKP_WEB_PATH"
 
-    # install the new files
-    tar --strip-components=1 -xvzf "$PKP_ROOT_PATH/$PKP_SOFTWARE-$NEW_VERSION.tar.gz" -C "$PKP_WEB_PATH"
+  # install the new files
+  tar --strip-components=1 -xvzf "$PKP_ROOT_PATH/$PKP_SOFTWARE-$NEW_VERSION.tar.gz" -C "$PKP_WEB_PATH"
 
-    # set permissions
-    chown -R $WEB_USER:$WEB_GROUP "$PKP_WEB_PATH"
-    chown $WEB_USER:$WEB_GROUP "$PKP_WEB_PATH/.htaccess"
+  # set permissions
+  chown -R $WEB_USER:$WEB_GROUP "$PKP_WEB_PATH"
+  chown $WEB_USER:$WEB_GROUP "$PKP_WEB_PATH/.htaccess"
 
-    # remove installation package
-    rm "$PKP_ROOT_PATH/$PKP_SOFTWARE-$NEW_VERSION.tar.gz"
+  # remove installation package
+  rm "$PKP_ROOT_PATH/$PKP_SOFTWARE-$NEW_VERSION.tar.gz"
+
+  # create the files directory
+  mkdir "$PKP_ROOT_PATH/ojs-files"
+}
+
+function Install_database()
+{
+  Data_prompt DB_ROOT_PASSWORD "MariaDB root password" || exit 1
+
+  Data_prompt DB_USER "OJS database user" || exit 1
+
+  Data_prompt DB_PASSWORD "OJS database password" || exit 1
+
+  mariadb --user="root" --password="$DB_ROOT_PASSWORD" --database="ojs_db" --execute='CREATE DATABASE ojs_db; GRANT ALL PRIVILEGES ON ojs_db.* TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD'; FLUSH PRIVILEGES;'
 }
 
 ############################################################
@@ -84,7 +118,7 @@ if (( $# == 0 )); then
 fi
 
 # get the options
-while getopts ":lhi" flag; do
+while getopts ":lhid" flag; do
    case $flag in
       l) # display License
         License
@@ -95,6 +129,11 @@ while getopts ":lhi" flag; do
       i) # install application
         Download_release_package
         Install_release_package
+        exit;;
+      d) # install application with database
+        Download_release_package
+        Install_release_package
+        Install_database
         exit;;
       \?) # invalid option
         Help
