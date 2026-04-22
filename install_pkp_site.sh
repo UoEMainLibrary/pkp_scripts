@@ -92,6 +92,12 @@ function Install_release_package()
 
   # create the files directory
   mkdir "$PKP_ROOT_PATH/ojs-files"
+
+  # write files directory path to config.inc.php
+  sed -i "s|files_dir = files|files_dir = $PKP_ROOT_PATH/ojs-files|g" "$PKP_WEB_PATH/config.inc.php"
+
+  # generate the app key (only for 3.5 onwards but why would you be installing any version earlier than 3.5?)
+  php $PKP_WEB_PATH/lib/pkp/tools/appKey.php generate
 }
 
 function Install_database()
