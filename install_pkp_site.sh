@@ -58,7 +58,7 @@ function Data_prompt()
   local __input
 
   echo "----" >&2
-  read -r -p "Please enter $__prompt: " __input >&2
+  read -r -p "$__prompt: " __input >&2
   echo >&2
 
   if [[ -z "$__input" ]]; then
@@ -85,7 +85,6 @@ function Install_release_package()
 
   # set permissions
   chown -R $WEB_USER:$WEB_GROUP "$PKP_WEB_PATH"
-  chown $WEB_USER:$WEB_GROUP "$PKP_WEB_PATH/.htaccess"
 
   # remove installation package
   rm "$PKP_ROOT_PATH/$PKP_SOFTWARE-$NEW_VERSION.tar.gz"
@@ -102,13 +101,20 @@ function Install_release_package()
 
 function Install_database()
 {
-  Data_prompt DB_ROOT_PASSWORD "MariaDB root password" || exit 1
+  Data_prompt DB_ROOT_PASSWORD "What is the MariaDB root password?" || exit 1
 
-  Data_prompt DB_USER "OJS database user" || exit 1
+  Data_prompt DB_NAME "Set the OJS database name" || exit 1
 
-  Data_prompt DB_PASSWORD "OJS database password" || exit 1
+  Data_prompt DB_USER "Set the OJS database user" || exit 1
 
-  mariadb --user="root" --password="$DB_ROOT_PASSWORD" --database="ojs_db" --execute="CREATE DATABASE ojs_db; GRANT ALL PRIVILEGES ON ojs_db.* TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD'; FLUSH PRIVILEGES;"
+  Data_prompt DB_PASSWORD "Set the OJS database password" || exit 1
+
+  mariadb --user="root" --password="$DB_ROOT_PASSWORD" --database="$DB_NAME" --execute="CREATE DATABASE $DB_NAME; GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD'; FLUSH PRIVILEGES;"
+
+  # write database details to config.inc.php
+  sed -i "s|username = ojs|username = $DB_USER|g" "$PKP_WEB_PATH/config.inc.php"
+  sed -i "s|password = ojs|password = $DB_PASSWORD|g" "$PKP_WEB_PATH/config.inc.php"
+  sed -i "s|name = ojs|name = $DB_NAME|g" "$PKP_WEB_PATH/config.inc.php"
 }
 
 ############################################################
