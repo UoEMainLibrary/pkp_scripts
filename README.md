@@ -58,3 +58,21 @@ After installing a new version of OJS or OMP, you need to manually update config
 
 - `./upgrade_pkp_site.sh -u`
 - `./upgrade_pkp_site.sh -e`
+
+## install_pkp_site.sh
+
+install_pkp_site.sh installs an OJS or OMP instance from scratch. It can be run to either install the application only or to install the application and a database. Note that that the database installation is designed only for MariaDB environments. 
+
+Though this writes some variables to config.inc.php, you'll need to manually update config.inc.php afterwards to ensure that it's fully configured. 
+
+install_pkp_site.sh requires the PKP_ROOT_PATH, PKP_WEB_PATH, PKP_SOFTWARE, and NEW_VERSION variables to be filled in .env.
+
+### usage
+
+`./install_pkp_site.sh [-l|h|i|d]`
+
+options:
+- `-l`     print the MIT License notification
+- `-h`     print this Help
+- `-i`     install application without database
+- `-d`     install application with database
