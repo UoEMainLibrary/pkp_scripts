@@ -133,9 +133,9 @@ function Files_backup()
     exit 1
   fi
 
-  tar cvzf "$PKP_BACKUP_PATH/$PKP_SOFTWARE_private_$DATE.tgz" -C "$PKP_PRIVATE_PATH" .
+  tar cvzf "$PKP_BACKUP_PATH/${PKP_SOFTWARE}_private_$DATE.tgz" -C "$PKP_PRIVATE_PATH" .
 
-  tar cvzf "$PKP_BACKUP_PATH/$PKP_SOFTWARE_application_$DATE.tgz" -C "$PKP_WEB_PATH" .
+  tar cvzf "$PKP_BACKUP_PATH/${PKP_SOFTWARE}_application_$DATE.tgz" -C "$PKP_WEB_PATH" .
 }
 
 ############################################################
