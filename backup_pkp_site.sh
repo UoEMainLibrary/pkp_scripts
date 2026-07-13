@@ -45,13 +45,14 @@ function Help()
    # Display Help
    echo "This script backs up an OJS or OMP database and website."
    echo
-   echo "Syntax: backup_pkp_site.sh [-l|h|d|p|f|b]"
+   echo "Syntax: backup_pkp_site.sh [-l|h|d|p|a|f|b]"
    echo "options:"
    echo "l     print the MIT License notification"
    echo "h     print this Help"
    echo "d     backup MySQL / MariaDB database"
    echo "p     backup PostgreSQL database"
-   echo "f     backup website files"
+   echo "a     backup application files"
+   echo "f     backup private files"
    echo "b     full backup of database and files"
    echo
 }
@@ -112,6 +113,17 @@ function Postgres_backup()
   fi
 }
 
+function Application_backup()
+{
+  # check all required variables are found
+  if [ -z "$PKP_BACKUP_PATH" ] || [ -z "$PKP_WEB_PATH" ] || [ -z "$PKP_SOFTWARE" ]; then
+    echo "Missing one or more required variables (PKP_BACKUP_PATH, PKP_WEB_PATH, PKP_SOFTWARE). Please set these fields in the .env file."
+    exit 1
+  fi
+
+  tar cvzf "$PKP_BACKUP_PATH/${PKP_SOFTWARE}_application_$DATE.tgz" -C "$PKP_WEB_PATH" .
+}
+
 function Files_backup()
 {
   # extract the values from the config.inc.php file
@@ -128,14 +140,12 @@ function Files_backup()
   fi
 
   # check all required variables are found
-  if [ -z "$PKP_BACKUP_PATH" ] || [ -z "$PKP_WEB_PATH" ] || [ -z "$OLD_VERSION" ]; then
-    echo "Missing one or more required variables (PKP_BACKUP_PATH, PKP_WEB_PATH, OLD_VERSION). Please set these fields in the .env file."
+  if [ -z "$PKP_BACKUP_PATH" ] || [ -z "$PKP_WEB_PATH" ] || [ -z "$PKP_SOFTWARE" ]; then
+    echo "Missing one or more required variables (PKP_BACKUP_PATH, PKP_WEB_PATH, PKP_SOFTWARE). Please set these fields in the .env file."
     exit 1
   fi
 
   tar cvzf "$PKP_BACKUP_PATH/${PKP_SOFTWARE}_private_$DATE.tgz" -C "$PKP_PRIVATE_PATH" .
-
-  tar cvzf "$PKP_BACKUP_PATH/${PKP_SOFTWARE}_application_$DATE.tgz" -C "$PKP_WEB_PATH" .
 }
 
 ############################################################
@@ -151,7 +161,7 @@ if (( $# == 0 )); then
 fi
 
 # get the options
-while getopts ":lhdpfb" flag; do
+while getopts ":lhdpafb" flag; do
    case $flag in
       l) # display License
         License
@@ -165,11 +175,15 @@ while getopts ":lhdpfb" flag; do
       p) # backup PostgreSQL database
         Postgres_backup
         exit;;
-      f) # backup files
+      a) # backup application files
+        Application_backup
+        exit;;
+      f) # backup private files
         Files_backup
         exit;;
       b) # backup database and files
         MariaDB_backup
+        Application_backup
         Files_backup
         exit;;
       \?) # invalid option
