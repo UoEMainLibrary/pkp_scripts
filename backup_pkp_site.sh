@@ -52,7 +52,7 @@ function Help()
    echo "d     backup MySQL / MariaDB database"
    echo "p     backup PostgreSQL database"
    echo "a     backup application files"
-   echo "f     backup private files"
+   echo "f     backup uploads files"
    echo "b     full backup of database and files"
    echo
 }
@@ -124,7 +124,7 @@ function Application_backup()
   tar cvzf "$PKP_BACKUP_PATH/${PKP_SOFTWARE}_application_$DATE.tgz" -C "$PKP_WEB_PATH" .
 }
 
-function Files_backup()
+function Uploads_backup()
 {
   # extract the values from the config.inc.php file
   PKP_PRIVATE_PATH=$(grep '^files_dir =' "$CONFIG_FILE" \
@@ -178,13 +178,13 @@ while getopts ":lhdpafb" flag; do
       a) # backup application files
         Application_backup
         exit;;
-      f) # backup private files
-        Files_backup
+      f) # backup upload files
+        Uploads_backup
         exit;;
-      b) # backup database and files
+      b) # backup database and all files
         MariaDB_backup
         Application_backup
-        Files_backup
+        Uploads_backup
         exit;;
       \?) # invalid option
         Help
