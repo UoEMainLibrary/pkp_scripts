@@ -117,6 +117,12 @@ function Copy_previous_files()
     # copy back the config
     cp "$PKP_WEB_PATH-$OLD_VERSION/config.inc.php" "$PKP_WEB_PATH"
 
+    # copy back the robots.txt
+    cp "$PKP_WEB_PATH-$OLD_VERSION/robots.txt" "$PKP_WEB_PATH"
+
+    # copy back Google Search Console verification
+    cp "$PKP_WEB_PATH-$OLD_VERSION/google*.html" "$PKP_WEB_PATH"
+
     # copy back the previous .htaccess file
     cp "$PKP_WEB_PATH-$OLD_VERSION/.htaccess-$DATE" "$PKP_WEB_PATH"
 
